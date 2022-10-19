@@ -19,7 +19,7 @@ public class inviteCommand extends SubCommand {
 	//Main instance
 	private Main mainClass = Main.getInstance();
 	
-	TribeManager dataManager = new TribeManager();
+	TribeManager tribeManager = new TribeManager();
 	
 	public Map<String, Player> TribeInvites = new HashMap<String, Player>();
 
@@ -45,61 +45,71 @@ public class inviteCommand extends SubCommand {
 	public void perform(Player p, String[] args) {
 		instance = this;
 		
-		String playerTribe = dataManager.getPlayerTribe(p);
-		String tribeName = dataManager.getTribeShowName(playerTribe);
+		String playerTribe = tribeManager.getPlayerTribe(p);
+		String tribeName = tribeManager.getTribeShowName(playerTribe);
 		
 		if (args.length == 2) {
-			String playerIGN = args[1];
-			if(!playerIGN.equals(p.getName())) {
-				Player invitee = Bukkit.getServer().getPlayer(playerIGN);
-				
-				boolean alreadyInvited = false;
-				if(invitee != null) {
-					
-					for(Map.Entry<String, Player> entry : TribeInvites.entrySet()) {
-						String tribe = entry.getKey();
-						Player player = entry.getValue();
+			if(tribeManager.CheckForElder(playerTribe, p) == true || tribeManager.CheckForChief(playerTribe, p) == true) {
+				int playerCap = tribeManager.getTribeMembers(playerTribe).size();
+				if(tribeManager.getMaxPlayers(playerTribe) < playerCap) {
+					String playerIGN = args[1];
+					if(!playerIGN.equals(p.getName())) {
+						Player invitee = Bukkit.getServer().getPlayer(playerIGN);
 						
-						if(tribe.equals(playerTribe) && player.equals(invitee)) {
-							alreadyInvited = true;
-							break;
-						}
-					}
-					
-					if(dataManager.getPlayerTribe(invitee).equals("none")) {
-						if(alreadyInvited == false) {
-							TribeInvites.put(playerTribe, invitee);
+						boolean alreadyInvited = false;
+						if(invitee != null) {
 							
-							invitee.sendMessage(mainClass.tribesColor + "You have been invited to join " + mainClass.lightGreen + tribeName
-									+ ChatColor.GRAY + "\nType " + ChatColor.DARK_GREEN + "/tribes accept " + playerTribe + ChatColor.GRAY + " to accept the invite! "
-									+ ChatColor.GRAY + "\nType " + ChatColor.DARK_RED + "/tribes decline " + playerTribe + ChatColor.GRAY + " to decline the invite! "
-									+ ChatColor.DARK_GRAY + "\nThis request will expire in 3 minutes!");
-							
-							p.sendMessage(ChatColor.GREEN + "Invitation successfully sent to " + playerIGN);
-							
-							new BukkitRunnable() {
+							for(Map.Entry<String, Player> entry : TribeInvites.entrySet()) {
+								String tribe = entry.getKey();
+								Player player = entry.getValue();
 								
-								@Override
-								public void run() {
-									if(CheckForActiveInvite(TribeInvites, playerTribe.toLowerCase(), invitee) == true) {
-										TribeInvites.remove(playerTribe, invitee);
-										p.sendMessage(ChatColor.RED + "Your tribe invite to " + playerIGN + " has expired!");
-										invitee.sendMessage(ChatColor.RED + "Your invitation to join " + playerTribe + " has expired!");
-									}
+								if(tribe.equals(playerTribe) && player.equals(invitee)) {
+									alreadyInvited = true;
+									break;
 								}
-							}.runTaskLater(mainClass, 3600);
+							}
 							
+							if(tribeManager.getPlayerTribe(invitee).equals("none")) {
+								if(alreadyInvited == false) {
+									TribeInvites.put(playerTribe, invitee);
+									
+									invitee.sendMessage(mainClass.tribesColor + "You have been invited to join " + mainClass.lightGreen + tribeName
+											+ ChatColor.GRAY + "\nType " + ChatColor.DARK_GREEN + "/tribes accept " + playerTribe + ChatColor.GRAY + " to accept the invite! "
+											+ ChatColor.GRAY + "\nType " + ChatColor.DARK_RED + "/tribes decline " + playerTribe + ChatColor.GRAY + " to decline the invite! "
+											+ ChatColor.DARK_GRAY + "\nThis request will expire in 3 minutes!");
+									
+									p.sendMessage(ChatColor.GREEN + "Invitation successfully sent to " + playerIGN);
+									
+									new BukkitRunnable() {
+										
+										@Override
+										public void run() {
+											if(CheckForActiveInvite(TribeInvites, playerTribe.toLowerCase(), invitee) == true) {
+												TribeInvites.remove(playerTribe, invitee);
+												p.sendMessage(ChatColor.RED + "Your tribe invite to " + playerIGN + " has expired!");
+												invitee.sendMessage(ChatColor.RED + "Your invitation to join " + playerTribe + " has expired!");
+											}
+										}
+									}.runTaskLater(mainClass, 3600);
+									
+								} else {
+									p.sendMessage(ChatColor.RED + playerIGN + " already has an active invite from your tribe!");
+								}
+							} else {
+								p.sendMessage(ChatColor.RED + playerIGN + " is already in a tribe!");
+							}	
 						} else {
-							p.sendMessage(ChatColor.RED + playerIGN + " already has an active invite from your tribe!");
-						}
+							p.sendMessage(ChatColor.RED + playerIGN + " is not online!");
+						}	
 					} else {
-						p.sendMessage(ChatColor.RED + playerIGN + " is already in a tribe!");
-					}	
+						p.sendMessage(ChatColor.RED + "You can not invite yourself!");
+					}
 				} else {
-					p.sendMessage(ChatColor.RED + playerIGN + " is not online!");
-				}	
+					p.sendMessage(ChatColor.RED + "Your tribe has a max player cap of " + playerCap + "!"
+							+ " Level up your tribe to raise the cap!");
+				}
 			} else {
-				p.sendMessage(ChatColor.RED + "You can not invite yourself!");
+				p.sendMessage(ChatColor.RED + "This command can only be used by Chiefs and Elders!");
 			}
 		} else {
 			p.sendMessage(ChatColor.RED + "Correct usage: /tribes invite [player]");

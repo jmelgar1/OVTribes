@@ -19,7 +19,7 @@ public class infoCommand extends SubCommand {
 	//Main instance
 	private Main mainClass = Main.getInstance();
 	
-	TribeManager dataManager = new TribeManager();
+	TribeManager tribeManager = new TribeManager();
 
 	@Override
 	public String getName() {
@@ -41,7 +41,7 @@ public class infoCommand extends SubCommand {
 
 	@Override
 	public void perform(Player p, String[] args) {
-		String playerTribe = dataManager.getPlayerTribe(p);
+		String playerTribe = tribeManager.getPlayerTribe(p);
 		FileConfiguration tribesFile = mainClass.getTribes();
 		
 		if(args.length == 1) {
@@ -69,7 +69,7 @@ public class infoCommand extends SubCommand {
 			int level = tribeSection.getInt("level");
 			List<String> members = tribeSection.getStringList("members");
 			String tag = tribeSection.getString("tag");
-			int bank = tribeSection.getInt("bank");
+			int vault = tribeSection.getInt("vault");
 			OfflinePlayer chief = Bukkit.getServer().getOfflinePlayer(UUID.fromString(tribeSection.getString("chief")));
 			
 			String elder = "";
@@ -81,21 +81,18 @@ public class infoCommand extends SubCommand {
 			
 			
 			p.sendMessage(ChatColor.GRAY + "---------[ " + mainClass.tribesColor + tribeName + ChatColor.GRAY + " ]---------");
-			p.sendMessage(mainClass.lightGreen + "Date Founded: " + mainClass.lighterGreen + dateCreated);
-			p.sendMessage(mainClass.lightGreen + "Level: " + mainClass.lighterGreen + level);
-			p.sendMessage(mainClass.lightGreen + "TAG: " + mainClass.lighterGreen + tag);
-			p.sendMessage(mainClass.lightGreen + "Bank: " + mainClass.lighterGreen + bank + " sponges");
-			p.sendMessage(mainClass.lightGreen + "Chief: " + mainClass.lighterGreen + chief.getName());
-			p.sendMessage(mainClass.lightGreen + "Elder: " + mainClass.lighterGreen + elder);
-			p.sendMessage(mainClass.lightGreen + "Members: ");
-			
+			p.sendMessage(mainClass.lightGreen + "✎Date Founded: " + mainClass.lighterGreen + dateCreated);
+			p.sendMessage(mainClass.lightGreen + "✦Level: " + mainClass.lighterGreen + level);
+			p.sendMessage(mainClass.lightGreen + "␠Vault: " + mainClass.lighterGreen + vault + " sponges");
+			p.sendMessage(mainClass.lightGreen + "♚Chief: " + mainClass.lighterGreen + chief.getName());
+			p.sendMessage(mainClass.lightGreen + "♛Elder: " + mainClass.lighterGreen + elder);
 			
 			StringBuffer sb = new StringBuffer();
 			for(String member : members) {
 				sb.append(Bukkit.getServer().getOfflinePlayer(UUID.fromString(member)).getName()).append(", ");
 			}
 			
-			p.sendMessage(mainClass.lighterGreen + "" + sb);
+			p.sendMessage(mainClass.lightGreen + "♞Members: " + mainClass.lighterGreen + "" + sb);
 		} else {
 			p.sendMessage(ChatColor.RED + "That tribe name does not exist!");
 		}

@@ -15,7 +15,7 @@ public class acceptCommand extends SubCommand {
 	//Main instance
 	private Main mainClass = Main.getInstance();
 	
-	TribeManager dataManager = new TribeManager();
+	TribeManager tribeManager = new TribeManager();
 
 	@Override
 	public String getName() {
@@ -44,10 +44,14 @@ public class acceptCommand extends SubCommand {
 			
 			if(invCmd != null) {
 				if(invCmd.CheckForActiveInvite(invCmd.TribeInvites, otherTribe.toLowerCase(), p) == true) {
-					List<String> currentMembers = dataManager.getTribeMembers(otherTribe);
+					List<String> currentMembers = tribeManager.getTribeMembers(otherTribe);
 					currentMembers.add(p.getUniqueId().toString());
-					dataManager.setTribeMembers(otherTribe, currentMembers);
-					p.sendMessage(ChatColor.GREEN + "You have joined " + dataManager.getTribeShowName(otherTribe) + "!");
+					tribeManager.setTribeMembers(otherTribe, currentMembers);
+					
+					
+					p.sendMessage(ChatColor.GREEN + "You have joined " + tribeManager.getTribeShowName(otherTribe) + "!");
+					tribeManager.sendMessageToMembers(otherTribe, ChatColor.GREEN + p.getName() + " has joined the tribe!");
+					
 					invCmd.TribeInvites.remove(otherTribe, p);
 					mainClass.saveTribesFile();
 				} else {

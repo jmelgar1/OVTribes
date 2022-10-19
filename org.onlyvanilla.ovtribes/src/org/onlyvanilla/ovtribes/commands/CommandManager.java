@@ -10,11 +10,17 @@ import org.onlyvanilla.ovtribes.commands.subcommands.acceptCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.chiefCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.createCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.declineCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.deleteCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.demoteCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.depositCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.elderCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.helpCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.infoCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.inviteCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.kickCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.ownershipCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.promoteCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.setWarpCommand;
 
 public class CommandManager implements CommandExecutor {
 
@@ -30,6 +36,12 @@ public class CommandManager implements CommandExecutor {
 		subCommands.add(new inviteCommand());
 		subCommands.add(new acceptCommand());
 		subCommands.add(new declineCommand());
+		subCommands.add(new kickCommand());
+		subCommands.add(new promoteCommand());
+		subCommands.add(new demoteCommand());
+		subCommands.add(new ownershipCommand());
+		subCommands.add(new deleteCommand());
+		subCommands.add(new setWarpCommand());
 	}
 	
 	@Override

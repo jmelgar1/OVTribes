@@ -33,12 +33,14 @@ public class elderCommand extends SubCommand {
 	public void perform(Player p, String[] args) {
 		p.sendMessage(ChatColor.GRAY + "----- " + mainClass.tribesColor + "TRIBES" + ChatColor.GRAY + " -----");
 		p.sendMessage(ChatColor.DARK_RED + "These commands are restricted to Elders & Chiefs only!");
-		p.sendMessage(mainClass.lightGreen + "1. " + mainClass.lighterGreen + "/tribes kick" +
-				ChatColor.GRAY + " (Kick a player from your tribe)");
-		p.sendMessage(mainClass.lightGreen + "2. " + mainClass.lighterGreen + "/tribes setwarp" +
-				ChatColor.GRAY + " (Set a tribe warp)");
-		p.sendMessage(mainClass.lightGreen + "3. " + mainClass.lighterGreen + "/tribes invite" +
+		p.sendMessage(mainClass.lightGreen + "1. " + mainClass.lighterGreen + "/tribes invite" +
 				ChatColor.GRAY + " (Invite a player to your tribe)");
+		p.sendMessage(mainClass.lightGreen + "2. " + mainClass.lighterGreen + "/tribes kick" +
+				ChatColor.GRAY + " (Kick a player from your tribe)");
+		p.sendMessage(mainClass.lightGreen + "3. " + mainClass.lighterGreen + "/tribes setwarp" +
+				ChatColor.GRAY + " (Set a tribe warp)");
+		p.sendMessage(mainClass.lightGreen + "4. " + mainClass.lighterGreen + "/tribes delwarp" +
+				ChatColor.GRAY + " (Delete a tribe warp)");
 		
 //		tribes create [name]
 //				tribes delete [name]

@@ -9,7 +9,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class declineCommand extends SubCommand {
 	
-	TribeManager dataManager = new TribeManager();
+	TribeManager tribeManager = new TribeManager();
 
 	@Override
 	public String getName() {

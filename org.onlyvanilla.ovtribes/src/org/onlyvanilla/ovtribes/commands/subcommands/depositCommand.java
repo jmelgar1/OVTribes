@@ -1,11 +1,6 @@
 package org.onlyvanilla.ovtribes.commands.subcommands;
 
-import java.util.List;
-import java.util.UUID;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -21,7 +16,7 @@ public class depositCommand extends SubCommand {
 	//Main instance
 	private Main mainClass = Main.getInstance();
 	
-	TribeManager dataManager = new TribeManager();
+	TribeManager tribeManager = new TribeManager();
 
 	@Override
 	public String getName() {
@@ -43,7 +38,7 @@ public class depositCommand extends SubCommand {
 
 	@Override
 	public void perform(Player p, String[] args) {
-		String playerTribe = dataManager.getPlayerTribe(p);
+		String playerTribe = tribeManager.getPlayerTribe(p);
 		FileConfiguration tribesFile = mainClass.getTribes();
 		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe);
 		
@@ -64,35 +59,23 @@ public class depositCommand extends SubCommand {
 								}
 							}
 						}
-						
-					int bank = tribeSection.getInt("bank") + amount;
-					tribeSection.set("bank", bank);
-					mainClass.saveTribesFile();
-					p.sendMessage(ChatColor.GREEN + "You have deposited " + amount + " sponges into the tribe bank!");
+							
+						int vault = tribeSection.getInt("vault") + amount;
+						tribeSection.set("vault", vault);
+						tribeManager.setLevel(playerTribe, vault);
+						mainClass.saveTribesFile();
+						p.sendMessage(ChatColor.GREEN + "You have deposited " + amount + " sponges into the tribe bank!");
+					} else {
+						p.sendMessage(ChatColor.RED + "You do not have " + amount + " sponges in your inventory!");
+					}
 				} else {
-					p.sendMessage(ChatColor.RED + "You do not have " + amount + " sponges in your inventory!");
-				}
+					p.sendMessage(ChatColor.RED + "Invalid amount!");
+				}	
 			} else {
-				p.sendMessage(ChatColor.RED + "Invalid amount!");
-			}	
+				p.sendMessage(ChatColor.RED + "Correct usage: /tribes deposit [amount]");
+			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes deposit [amount]");
+			p.sendMessage(ChatColor.RED + "You are not in a tribe!");
 		}
-	} else {
-		p.sendMessage(ChatColor.RED + "You are not in a tribe!");
-	}
-		
-//		tribes create [name]
-//				tribes delete [name]
-//				tribes add [name]
-//				tribes kick [name]
-//				tribes promote [name]
-//				tribes demote [name]
-//				tribes ownership [name]
-//				tribes warp
-//				tribes setwarp
-//				tribes list
-//				tribes info
-//				tribes deposit
 	}
 }

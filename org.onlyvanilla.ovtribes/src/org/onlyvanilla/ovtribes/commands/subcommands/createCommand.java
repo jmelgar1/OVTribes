@@ -72,10 +72,12 @@ public class createCommand extends SubCommand {
 						newTribe.set("level", 1);
 						newTribe.set("chief", playerUUID);
 						newTribe.set("elder", "");
-						newTribe.set("tag", "");
-						newTribe.set("warps", "");
-						newTribe.set("bank", 0);
+						newTribe.set("vault", 0);
 						newTribe.set("showname", tribeName);
+						newTribe.set("currentWarps", 0);
+						newTribe.set("maxWarps", 1);
+						newTribe.set("maxPlayers", 3);
+						newTribe.createSection("warps");
 						
 						Date now = new Date();
 						SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
