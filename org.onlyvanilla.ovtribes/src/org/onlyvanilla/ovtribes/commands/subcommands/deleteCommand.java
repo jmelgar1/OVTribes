@@ -34,15 +34,20 @@ public class deleteCommand extends SubCommand {
 
 	@Override
 	public void perform(Player p, String[] args) {
-		if(args.length == 1) {
+		if(args.length == 2) {
+			String deletedTribe = args[1];
 			String playerTribe = tribeManager.getPlayerTribe(p);
 			if(!playerTribe.equals("none")) {
 				if(tribeManager.CheckForChief(playerTribe, p) == true) {
+					if(deletedTribe.equalsIgnoreCase(playerTribe)) {
 					String tribe = tribeManager.getPlayerTribe(p);
 					FileConfiguration tribesFile = mainClass.getTribes();
 					tribeManager.sendMessageToMembers(tribe, ChatColor.RED.toString() + ChatColor.BOLD + "The tribe has been deleted!");
 					tribesFile.set(tribe, null);
 					mainClass.saveTribesFile();
+					} else {
+						p.sendMessage(ChatColor.RED + "You are not in that tribe!");
+					}
 				} else {
 					p.sendMessage(ChatColor.RED + "You are not a chief!");
 				}
@@ -50,7 +55,7 @@ public class deleteCommand extends SubCommand {
 				p.sendMessage(ChatColor.RED + "You are not in a tribe!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes delete");
+			p.sendMessage(ChatColor.RED + "Correct usage: /tribes delete [yourtribe]");
 		}
 	}
 }

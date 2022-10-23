@@ -9,3 +9,14 @@ commands:
     tribes:
         description: Create tribes
         usage: /tribes create
+    claimsponges:
+        description: Claim a sponge reward
+        usage: /claimsponges
+    setsponges:
+        description: Set sponge reward
+        usage: /setsponges [player] [amount]
+        permission: tribes.setsponges
+    addsponges:
+        description: Ad sponge reward
+        usage: /addsponges [player] [amount]
+        permission: tribes.addsponges

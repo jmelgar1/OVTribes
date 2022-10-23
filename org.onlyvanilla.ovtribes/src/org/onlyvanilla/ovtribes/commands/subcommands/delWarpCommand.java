@@ -7,7 +7,7 @@ import org.onlyvanilla.ovtribes.managers.TribeManager;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class setWarpCommand extends SubCommand {
+public class delWarpCommand extends SubCommand {
 	
 	//Main instance
 	private Main mainClass = Main.getInstance();
@@ -17,19 +17,19 @@ public class setWarpCommand extends SubCommand {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "setwarp";
+		return "delwarp";
 	}
 
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return "Set a tribe warp";
+		return "Delete a tribe warp";
 	}
 
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes setwarp";
+		return "/tribes delwarp";
 	}
 
 	@Override
@@ -37,21 +37,13 @@ public class setWarpCommand extends SubCommand {
 		if (args.length == 2) {
 			String playerTribe = tribeManager.getPlayerTribe(p);
 			if(tribeManager.CheckForElder(playerTribe, p) == true || tribeManager.CheckForChief(playerTribe, p) == true) {
-				if(tribeManager.getNumberOfWarps(playerTribe) < tribeManager.getMaxWarps(playerTribe)) {
-					String warpName = args[1];
-					if(warpName.matches("[a-zA-Z0-9]*") == true) {
-						tribeManager.setWarp(playerTribe, p, warpName);
-					} else {
-						p.sendMessage(ChatColor.RED + "Warp names must only contain letters and/or numbers!");
-					}
-				} else {
-					p.sendMessage(ChatColor.RED + "The tribe's max number of warps is " + tribeManager.getMaxWarps(playerTribe) + "!");
-				}
+				String warpName = args[1];
+				tribeManager.deleteWarp(playerTribe, p, warpName);
 			} else {
 				p.sendMessage(ChatColor.RED + "Only chiefs and elders can set warps!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes setwarp [warp_name]");
+			p.sendMessage(ChatColor.RED + "Correct usage: /tribes delwarp [warp_name]");
 		}
 	}
 

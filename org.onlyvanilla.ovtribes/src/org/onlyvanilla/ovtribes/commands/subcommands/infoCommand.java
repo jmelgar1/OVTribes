@@ -1,7 +1,9 @@
 package org.onlyvanilla.ovtribes.commands.subcommands;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -48,7 +50,7 @@ public class infoCommand extends SubCommand {
 			if(!playerTribe.equals("none")) {
 				
 				ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe);
-				getTribeInfo(tribesFile, tribeSection, playerTribe, p);
+				getTribeInfo(tribesFile, tribeSection, playerTribe, p, false);
 				
 			} else {
 				p.sendMessage(ChatColor.RED + "You are not in a tribe! To view other tribes use /tribes info [tribe]");
@@ -57,18 +59,16 @@ public class infoCommand extends SubCommand {
 			String otherTribe = args[1];
 			
 			ConfigurationSection tribeSection = tribesFile.getConfigurationSection(otherTribe.toLowerCase());
-			getTribeInfo(tribesFile, tribeSection, otherTribe, p);
+			getTribeInfo(tribesFile, tribeSection, otherTribe, p, true);
 		} else {
 			p.sendMessage(ChatColor.RED + "Correct usage: /tribes info [tribe]");
 		}
 	}
 	
-	private void getTribeInfo(FileConfiguration tribesFile, ConfigurationSection tribeSection, String tribe, Player p) {
+	private void getTribeInfo(FileConfiguration tribesFile, ConfigurationSection tribeSection, String tribe, Player p, boolean bool) {
 		if(tribesFile.getConfigurationSection(tribe.toLowerCase()) != null) {
 			String tribeName = tribeSection.getString("showname");
 			int level = tribeSection.getInt("level");
-			List<String> members = tribeSection.getStringList("members");
-			String tag = tribeSection.getString("tag");
 			int vault = tribeSection.getInt("vault");
 			OfflinePlayer chief = Bukkit.getServer().getOfflinePlayer(UUID.fromString(tribeSection.getString("chief")));
 			
@@ -87,12 +87,19 @@ public class infoCommand extends SubCommand {
 			p.sendMessage(mainClass.lightGreen + "♚Chief: " + mainClass.lighterGreen + chief.getName());
 			p.sendMessage(mainClass.lightGreen + "♛Elder: " + mainClass.lighterGreen + elder);
 			
-			StringBuffer sb = new StringBuffer();
-			for(String member : members) {
-				sb.append(Bukkit.getServer().getOfflinePlayer(UUID.fromString(member)).getName()).append(", ");
+			List<String> membersUUID = tribeSection.getStringList("members");
+			List<String> membersIGN = new ArrayList<String>();
+			for(String member : membersUUID) {
+				membersIGN.add(Bukkit.getServer().getOfflinePlayer(UUID.fromString(member)).getName());
 			}
 			
-			p.sendMessage(mainClass.lightGreen + "♞Members: " + mainClass.lighterGreen + "" + sb);
+			String members = membersIGN.stream().collect(Collectors.joining(", "));
+			
+			p.sendMessage(mainClass.lightGreen + "♞Members: " + mainClass.lighterGreen + "" + members);
+			
+			if(bool == false) {
+				p.sendMessage(mainClass.lightGreen + "⥮Warps: " + mainClass.lighterGreen + tribeManager.getWarpString(tribeName, p));
+			}
 		} else {
 			p.sendMessage(ChatColor.RED + "That tribe name does not exist!");
 		}

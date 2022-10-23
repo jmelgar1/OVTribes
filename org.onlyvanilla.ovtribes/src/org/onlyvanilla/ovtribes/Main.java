@@ -10,6 +10,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.onlyvanilla.ovtribes.Main;
 import org.onlyvanilla.ovtribes.commands.CommandManager;
+import org.onlyvanilla.ovtribes.commands.claimspongesCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.admin.addspongesCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.admin.setspongesCommand;
+import org.onlyvanilla.ovtribes.runnables.CheckForUnclaimed;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -22,9 +26,14 @@ public class Main extends JavaPlugin {
 	private File tribesFile;
 	private FileConfiguration tribes;
 	
+	//unclaimed rewards file
+	private File rewardsFile;
+	private FileConfiguration rewards;
+	
 	public ChatColor tribesColor = net.md_5.bungee.api.ChatColor.of("#db9e58");
 	public ChatColor lightGreen = net.md_5.bungee.api.ChatColor.of("#95bf56");
 	public ChatColor lighterGreen = net.md_5.bungee.api.ChatColor.of("#b4ba82");
+	public ChatColor spongeColor = net.md_5.bungee.api.ChatColor.of("#dfff00");
 	
 	@Override
 	public void onEnable() {
@@ -33,9 +42,15 @@ public class Main extends JavaPlugin {
 		instance = this;
 		
 		getCommand("tribes").setExecutor(new CommandManager());
+		getCommand("claimsponges").setExecutor(new claimspongesCommand());
+		getCommand("setsponges").setExecutor(new setspongesCommand());
+		getCommand("addsponges").setExecutor(new addspongesCommand());
 		
 		createTribesFile();
-
+		createRewardsFile();
+		
+		CheckForUnclaimed checkForUnclaimed = new CheckForUnclaimed();
+		checkForUnclaimed.runTaskTimer(this, 0L, 12000);
 	}
 	
 	public void onDisable() {
@@ -55,11 +70,6 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	public void reloadTribesFile() {
-		tribes = YamlConfiguration.loadConfiguration(tribesFile);
-		
-	}
-	
 	public FileConfiguration getTribes() {
 		return this.tribes;
 	}
@@ -76,6 +86,36 @@ public class Main extends JavaPlugin {
 		try {
 			tribes.load(tribesFile);
 			System.out.println("(!) tribes.yml loaded");
+		} catch(IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	//REWARDS FILE
+	public void saveRewardsFile() {
+		try {
+			rewards.save(rewardsFile);
+		} catch (IOException e) {
+			Bukkit.getConsoleSender().sendMessage("Couldn't save unclaimedRewards.yml");
+		}
+	}
+	
+	public FileConfiguration getRewards() {
+		return this.rewards;
+	}
+	
+	private void createRewardsFile() {
+		rewardsFile = new File(getDataFolder(), "unclaimedRewards.yml");
+		if(!rewardsFile.exists()) {
+			rewardsFile.getParentFile().mkdirs();
+			saveResource("unclaimedRewards.yml", false);
+			System.out.println("(!) unclaimedRewards.yml created");
+		}
+		
+		rewards = new YamlConfiguration();
+		try {
+			rewards.load(rewardsFile);
+			System.out.println("(!) unclaimedRewards.yml loaded");
 		} catch(IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		} 

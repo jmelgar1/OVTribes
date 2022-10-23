@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.onlyvanilla.ovtribes.Main;
 import org.onlyvanilla.ovtribes.commands.SubCommand;
@@ -49,16 +50,7 @@ public class depositCommand extends SubCommand {
 				
 				if(amount > 0) {
 					if(p.getInventory().containsAtLeast(sponges, amount)) {
-						for(ItemStack invItem : p.getInventory().getContents()){
-							if(invItem != null) {
-								if(invItem.getType().equals(Material.SPONGE)) {
-									int preAmount = invItem.getAmount();
-									int newAmount = preAmount - amount;
-									invItem.setAmount(newAmount);
-									break;
-								}
-							}
-						}
+						removeItems(p.getInventory(), Material.SPONGE, amount);
 							
 						int vault = tribeSection.getInt("vault") + amount;
 						tribeSection.set("vault", vault);
@@ -78,4 +70,24 @@ public class depositCommand extends SubCommand {
 			p.sendMessage(ChatColor.RED + "You are not in a tribe!");
 		}
 	}
+	
+   public static void removeItems(Inventory inventory, Material type, int amount) {
+        if (amount <= 0) return;
+        int size = inventory.getSize();
+        for (int slot = 0; slot < size; slot++) {
+            ItemStack is = inventory.getItem(slot);
+            if (is == null) continue;
+            if (type == is.getType()) {
+                int newAmount = is.getAmount() - amount;
+                if (newAmount > 0) {
+                    is.setAmount(newAmount);
+                    break;
+                } else {
+                    inventory.clear(slot);
+                    amount = -newAmount;
+                    if (amount == 0) break;
+                }
+            }
+        }
+    }
 }
