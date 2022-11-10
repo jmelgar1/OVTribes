@@ -1,20 +1,15 @@
 package org.onlyvanilla.ovtribes.commands.subcommands;
 
 import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.onlyvanilla.ovtribes.Main;
 import org.onlyvanilla.ovtribes.commands.SubCommand;
 import org.onlyvanilla.ovtribes.managers.TribeManager;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class kickCommand extends SubCommand {
-	
-	//Main instance
-	private Main mainClass = Main.getInstance();
 	
 	TribeManager tribeManager = new TribeManager();
 
@@ -33,7 +28,7 @@ public class kickCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes kick";
+		return "/tribes kick [player]";
 	}
 
 	@Override
@@ -70,7 +65,7 @@ public class kickCommand extends SubCommand {
 				}
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes kick [player]");
+			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 }

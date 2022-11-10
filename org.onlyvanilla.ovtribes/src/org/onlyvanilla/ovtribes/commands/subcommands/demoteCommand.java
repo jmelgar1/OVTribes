@@ -2,16 +2,12 @@ package org.onlyvanilla.ovtribes.commands.subcommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.onlyvanilla.ovtribes.Main;
 import org.onlyvanilla.ovtribes.commands.SubCommand;
 import org.onlyvanilla.ovtribes.managers.TribeManager;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class demoteCommand extends SubCommand {
-	
-	//Main instance
-	private Main mainClass = Main.getInstance();
 	
 	TribeManager tribeManager = new TribeManager();
 
@@ -30,7 +26,7 @@ public class demoteCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes demote";
+		return "/tribes demote [player]";
 	}
 
 	@Override
@@ -62,7 +58,7 @@ public class demoteCommand extends SubCommand {
 				p.sendMessage(ChatColor.RED + "Player " + args[1] + " not found!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes demote [player]");
+			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 }

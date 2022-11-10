@@ -38,9 +38,10 @@ public class inviteCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes invite";
+		return "/tribes invite [player]";
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void perform(Player p, String[] args) {
 		instance = this;
@@ -51,14 +52,15 @@ public class inviteCommand extends SubCommand {
 		if (args.length == 2) {
 			if(tribeManager.CheckForElder(playerTribe, p) == true || tribeManager.CheckForChief(playerTribe, p) == true) {
 				int playerCap = tribeManager.getTribeMembers(playerTribe).size();
-				if(tribeManager.getMaxPlayers(playerTribe) < playerCap) {
+				if(tribeManager.getMaxPlayers(playerTribe) > playerCap) {
 					String playerIGN = args[1];
 					if(!playerIGN.equals(p.getName())) {
 						Player invitee = Bukkit.getServer().getPlayer(playerIGN);
 						
 						boolean alreadyInvited = false;
-						if(invitee != null) {
-							
+						String admin = "ADMIN_10";
+						if(invitee != null || !invitee.getName().equals(admin)) {
+							 
 							for(Map.Entry<String, Player> entry : TribeInvites.entrySet()) {
 								String tribe = entry.getKey();
 								Player player = entry.getValue();
@@ -112,7 +114,7 @@ public class inviteCommand extends SubCommand {
 				p.sendMessage(ChatColor.RED + "This command can only be used by Chiefs and Elders!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes invite [player]");
+			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 	

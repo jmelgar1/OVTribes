@@ -21,4 +21,8 @@ public class SpongeManager {
 		}
 		return 0;
 	}	
+	
+	public int getRandomNumber(int min, int max) {
+		return (int) ((Math.random() * (max-min)) + min);
+	}
 }

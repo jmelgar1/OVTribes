@@ -19,10 +19,13 @@ import org.onlyvanilla.ovtribes.commands.subcommands.helpCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.infoCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.inviteCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.kickCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.listCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.ownershipCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.promoteCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.renameCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.setWarpCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.warpCommand;
+import org.onlyvanilla.ovtribes.commands.subcommands.whoCommand;
 
 public class CommandManager implements CommandExecutor {
 
@@ -46,6 +49,9 @@ public class CommandManager implements CommandExecutor {
 		subCommands.add(new setWarpCommand());
 		subCommands.add(new warpCommand());
 		subCommands.add(new delWarpCommand());
+		subCommands.add(new listCommand());
+		subCommands.add(new renameCommand());
+		subCommands.add(new whoCommand());
 	}
 	
 	@Override

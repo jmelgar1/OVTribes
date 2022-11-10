@@ -39,15 +39,17 @@ public class helpCommand extends SubCommand {
 				ChatColor.GRAY + " (Warp to your tribe's warp)");
 		p.sendMessage(mainClass.lightGreen + "3. " + mainClass.lighterGreen + "/tribes info" +
 				ChatColor.GRAY + " (See tribe info)");
-		p.sendMessage(mainClass.lightGreen + "4. " + mainClass.lighterGreen + "/tribes list" +
+		p.sendMessage(mainClass.lightGreen + "4. " + mainClass.lighterGreen + "/tribes who" +
+				ChatColor.GRAY + " (Get player's tribe info)");
+		p.sendMessage(mainClass.lightGreen + "5. " + mainClass.lighterGreen + "/tribes list" +
 				ChatColor.GRAY + " (List tribes)");
-		p.sendMessage(mainClass.lightGreen + "5. " + mainClass.lighterGreen + "/tribes deposit" +
+		p.sendMessage(mainClass.lightGreen + "6. " + mainClass.lighterGreen + "/tribes deposit" +
 				ChatColor.GRAY + " (Deposit sponges to tribe bank)");
-		p.sendMessage(mainClass.lightGreen + "6. " + mainClass.lighterGreen + "/tribes bank" +
+		p.sendMessage(mainClass.lightGreen + "7. " + mainClass.lighterGreen + "/tribes bank" +
 				ChatColor.GRAY + " (See your tribes bank)");
-		p.sendMessage(mainClass.lightGreen + "7. " + mainClass.lighterGreen + "/tribes accept" +
+		p.sendMessage(mainClass.lightGreen + "8. " + mainClass.lighterGreen + "/tribes accept" +
 				ChatColor.GRAY + " (Accept a tribe invite request)");
-		p.sendMessage(mainClass.lightGreen + "8. " + mainClass.lighterGreen + "/tribes decline" +
+		p.sendMessage(mainClass.lightGreen + "9. " + mainClass.lighterGreen + "/tribes decline" +
 				ChatColor.GRAY + " (Decline a tribe invite request)");
 		
 //		tribes create [name]

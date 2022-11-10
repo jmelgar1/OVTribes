@@ -32,7 +32,7 @@ public class acceptCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes accept";
+		return "/tribes accept [tribe]";
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class acceptCommand extends SubCommand {
 				p.sendMessage(ChatColor.RED + "You do not have an active tribe invite!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes accept [tribe]");
+			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 	

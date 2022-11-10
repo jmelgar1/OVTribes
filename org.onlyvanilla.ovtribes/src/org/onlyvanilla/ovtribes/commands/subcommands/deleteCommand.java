@@ -29,7 +29,7 @@ public class deleteCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes delete";
+		return "/tribes delete [tribe]";
 	}
 
 	@Override

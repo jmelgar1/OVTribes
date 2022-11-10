@@ -1,7 +1,6 @@
 package org.onlyvanilla.ovtribes.commands.subcommands;
 
 import org.bukkit.entity.Player;
-import org.onlyvanilla.ovtribes.Main;
 import org.onlyvanilla.ovtribes.commands.SubCommand;
 import org.onlyvanilla.ovtribes.managers.TribeManager;
 
@@ -26,7 +25,7 @@ public class declineCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes decline";
+		return "/tribes decline [tribe]";
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public class declineCommand extends SubCommand {
 				p.sendMessage(ChatColor.RED + "You do not have an active tribe invite!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes decline [tribe]");
+			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 }

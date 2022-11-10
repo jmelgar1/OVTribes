@@ -41,6 +41,8 @@ public class chiefCommand extends SubCommand {
 				ChatColor.GRAY + " (Demote an elder rank player)");
 		p.sendMessage(mainClass.lightGreen + "4. " + mainClass.lighterGreen + "/tribes delete" +
 				ChatColor.GRAY + " (Delete a tribe)");
+		p.sendMessage(mainClass.lightGreen + "5. " + mainClass.lighterGreen + "/tribes rename" +
+				ChatColor.GRAY + " (Rename your tribe)");
 		
 //		tribes create [name]
 //				tribes delete [name]

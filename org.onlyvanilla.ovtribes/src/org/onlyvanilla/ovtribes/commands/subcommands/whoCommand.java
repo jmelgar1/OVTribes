@@ -16,7 +16,7 @@ import org.onlyvanilla.ovtribes.managers.TribeManager;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class infoCommand extends SubCommand {
+public class whoCommand extends SubCommand {
 	
 	//Main instance
 	private Main mainClass = Main.getInstance();
@@ -26,40 +26,35 @@ public class infoCommand extends SubCommand {
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return "info";
+		return "who";
 	}
 
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return "See tribe info";
+		return "See what tribe a player is in";
 	}
 
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes info [tribe]";
+		return "/tribes who [player]";
 	}
 
 	@Override
 	public void perform(Player p, String[] args) {
-		String playerTribe = tribeManager.getPlayerTribe(p);
+		
 		FileConfiguration tribesFile = mainClass.getTribes();
 		
-		if(args.length == 1) {
-			if(!playerTribe.equals("none")) {
-				
-				ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe);
-				tribeManager.getTribeInfo(tribesFile, tribeSection, playerTribe, p, false);
-				
-			} else {
-				p.sendMessage(ChatColor.RED + "You are not in a tribe! To view other tribes use /tribes info [tribe]");
-			}
-		} else if (args.length == 2) {
-			String otherTribe = args[1];
+		if(args.length == 2) {
 			
-			ConfigurationSection tribeSection = tribesFile.getConfigurationSection(otherTribe.toLowerCase());
-			tribeManager.getTribeInfo(tribesFile, tribeSection, otherTribe, p, true);
+			OfflinePlayer pl = Bukkit.getServer().getOfflinePlayer(args[1]);
+			
+			if(pl != null) {
+				String playerTribe = tribeManager.getOfflinePlayerTribe(pl);
+				ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe);
+				tribeManager.getTribeInfo(tribesFile, tribeSection, playerTribe, p, true);
+			}
 		} else {
 			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}

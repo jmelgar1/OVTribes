@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -35,7 +34,7 @@ public class createCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes create";
+		return "/tribes create [tribe]";
 	}
 
 	@Override
@@ -77,6 +76,8 @@ public class createCommand extends SubCommand {
 						newTribe.set("currentWarps", 0);
 						newTribe.set("maxWarps", 1);
 						newTribe.set("maxPlayers", 3);
+						newTribe.set("requiredSponges", 100);
+						newTribe.set("minimumAmount", 0);
 						newTribe.createSection("warps");
 						
 						Date now = new Date();
@@ -107,7 +108,7 @@ public class createCommand extends SubCommand {
 			p.sendMessage(ChatColor.RED + "Tribe names must only contain upper or lower case letters!");
 		}
 	} else {
-		p.sendMessage(ChatColor.RED + "Correct usage: /tribes create [name]");
+		p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 }

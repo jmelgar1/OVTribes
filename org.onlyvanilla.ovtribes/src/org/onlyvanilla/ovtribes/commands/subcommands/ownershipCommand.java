@@ -26,7 +26,7 @@ public class ownershipCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes ownership";
+		return "/tribes ownership [player]";
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ownershipCommand extends SubCommand {
 				p.sendMessage(ChatColor.RED + args[1] + " not found!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes ownership [player]");
+			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 }

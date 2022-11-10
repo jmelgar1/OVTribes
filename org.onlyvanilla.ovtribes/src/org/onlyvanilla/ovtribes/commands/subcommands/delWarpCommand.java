@@ -1,18 +1,16 @@
 package org.onlyvanilla.ovtribes.commands.subcommands;
 
 import org.bukkit.entity.Player;
-import org.onlyvanilla.ovtribes.Main;
 import org.onlyvanilla.ovtribes.commands.SubCommand;
 import org.onlyvanilla.ovtribes.managers.TribeManager;
+import org.onlyvanilla.ovtribes.managers.WarpManager;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class delWarpCommand extends SubCommand {
 	
-	//Main instance
-	private Main mainClass = Main.getInstance();
-	
 	TribeManager tribeManager = new TribeManager();
+	WarpManager warpManager = new WarpManager();
 
 	@Override
 	public String getName() {
@@ -29,7 +27,7 @@ public class delWarpCommand extends SubCommand {
 	@Override
 	public String getSyntax() {
 		// TODO Auto-generated method stub
-		return "/tribes delwarp";
+		return "/tribes delwarp [warp]";
 	}
 
 	@Override
@@ -38,12 +36,12 @@ public class delWarpCommand extends SubCommand {
 			String playerTribe = tribeManager.getPlayerTribe(p);
 			if(tribeManager.CheckForElder(playerTribe, p) == true || tribeManager.CheckForChief(playerTribe, p) == true) {
 				String warpName = args[1];
-				tribeManager.deleteWarp(playerTribe, p, warpName);
+				warpManager.deleteWarp(playerTribe, p, warpName);
 			} else {
 				p.sendMessage(ChatColor.RED + "Only chiefs and elders can set warps!");
 			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Correct usage: /tribes delwarp [warp_name]");
+			p.sendMessage(ChatColor.RED + "Correct usage: " + getSyntax());
 		}
 	}
 

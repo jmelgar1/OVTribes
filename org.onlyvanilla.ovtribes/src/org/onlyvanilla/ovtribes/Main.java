@@ -13,6 +13,10 @@ import org.onlyvanilla.ovtribes.commands.CommandManager;
 import org.onlyvanilla.ovtribes.commands.claimspongesCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.admin.addspongesCommand;
 import org.onlyvanilla.ovtribes.commands.subcommands.admin.setspongesCommand;
+import org.onlyvanilla.ovtribes.events.BreakAncientDebri;
+import org.onlyvanilla.ovtribes.events.BreakDiamondOrEmeraldOre;
+import org.onlyvanilla.ovtribes.events.CatchTreasure;
+import org.onlyvanilla.ovtribes.events.KillEvent;
 import org.onlyvanilla.ovtribes.runnables.CheckForUnclaimed;
 
 import net.md_5.bungee.api.ChatColor;
@@ -29,6 +33,10 @@ public class Main extends JavaPlugin {
 	//unclaimed rewards file
 	private File rewardsFile;
 	private FileConfiguration rewards;
+	
+	//tribe prices file
+	private File pricesFile;
+	private FileConfiguration prices;
 	
 	public ChatColor tribesColor = net.md_5.bungee.api.ChatColor.of("#db9e58");
 	public ChatColor lightGreen = net.md_5.bungee.api.ChatColor.of("#95bf56");
@@ -48,6 +56,12 @@ public class Main extends JavaPlugin {
 		
 		createTribesFile();
 		createRewardsFile();
+		createPricesFile();
+		
+		getServer().getPluginManager().registerEvents(new BreakDiamondOrEmeraldOre(), this);
+		getServer().getPluginManager().registerEvents(new BreakAncientDebri(), this);
+		getServer().getPluginManager().registerEvents(new CatchTreasure(), this);
+		getServer().getPluginManager().registerEvents(new KillEvent(), this);
 		
 		CheckForUnclaimed checkForUnclaimed = new CheckForUnclaimed();
 		checkForUnclaimed.runTaskTimer(this, 0L, 12000);
@@ -116,6 +130,36 @@ public class Main extends JavaPlugin {
 		try {
 			rewards.load(rewardsFile);
 			System.out.println("(!) unclaimedRewards.yml loaded");
+		} catch(IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	//prices file
+	public void savePricesFile() {
+		try {
+			prices.save(pricesFile);
+		} catch (IOException e) {
+			Bukkit.getConsoleSender().sendMessage("Couldn't save prices.yml");
+		}
+	}
+	
+	public FileConfiguration getPrices() {
+		return this.prices;
+	}
+	
+	private void createPricesFile() {
+		pricesFile = new File(getDataFolder(), "prices.yml");
+		if(!pricesFile.exists()) {
+			pricesFile.getParentFile().mkdirs();
+			saveResource("prices.yml", false);
+			System.out.println("(!) prices.yml created");
+		}
+		
+		prices = new YamlConfiguration();
+		try {
+			prices.load(pricesFile);
+			System.out.println("(!) prices.yml loaded");
 		} catch(IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		} 

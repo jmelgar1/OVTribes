@@ -1,17 +1,15 @@
 package org.onlyvanilla.ovtribes.managers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.onlyvanilla.ovtribes.Main;
 
 import net.md_5.bungee.api.ChatColor;
@@ -22,6 +20,19 @@ public class TribeManager {
 	private Main mainClass = Main.getInstance();
 	
 	public String getPlayerTribe(Player p) {
+		FileConfiguration tribesFile = mainClass.getTribes();
+		String playerUUID = p.getUniqueId().toString();
+		
+		for(String tribe : tribesFile.getKeys(false)) {
+			ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe);
+			if(tribeSection.getStringList("members").contains(playerUUID) || tribeSection.get("chief").equals(playerUUID)) {
+				return tribe;
+			}
+		}
+		return "none";
+	}
+	
+	public String getOfflinePlayerTribe(OfflinePlayer p) {
 		FileConfiguration tribesFile = mainClass.getTribes();
 		String playerUUID = p.getUniqueId().toString();
 		
@@ -135,6 +146,43 @@ public class TribeManager {
 		return chief;
 	}
 	
+	public int getVault(String tribe) {
+		FileConfiguration tribesFile = mainClass.getTribes();
+		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
+		int vault = tribeSection.getInt("vault");
+		return vault;
+	}
+	
+	public void addToVault(String tribe, int amount, Player p) {
+		FileConfiguration tribesFile = mainClass.getTribes();
+		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
+		int vault = getVault(tribe);
+		int newAmount = vault + amount;
+		ChatColor transactionColor0 = net.md_5.bungee.api.ChatColor.of("#E7761E");
+		ChatColor transactionColor1 = net.md_5.bungee.api.ChatColor.of("#72C06C");
+		ChatColor transactionColor2 = net.md_5.bungee.api.ChatColor.of("#767166");
+		ChatColor transactionColor3 = net.md_5.bungee.api.ChatColor.of("#4BD613");
+		String transactionMessage = transactionColor0 + "Tribe Vault: " + transactionColor1 + vault + transactionColor2 + " -> " + transactionColor3 + newAmount;
+		sendMessageToMembers(tribe, ChatColor.GREEN + "(" + ChatColor.DARK_GREEN + p.getName() + ChatColor.GREEN + ") " + transactionMessage);
+		tribeSection.set("vault", newAmount);
+		mainClass.saveTribesFile();
+	}
+	
+	public void removeFromVault(String tribe, int amount, Player p) {
+		FileConfiguration tribesFile = mainClass.getTribes();
+		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
+		int vault = getVault(tribe);
+		int newAmount = vault - amount;
+		ChatColor transactionColor0 = net.md_5.bungee.api.ChatColor.of("#E7761E");
+		ChatColor transactionColor1 = net.md_5.bungee.api.ChatColor.of("#D69213");
+		ChatColor transactionColor2 = net.md_5.bungee.api.ChatColor.of("#767166");
+		ChatColor transactionColor3 = net.md_5.bungee.api.ChatColor.of("#C0A66C");
+		String transactionMessage = transactionColor0 + "Tribe Vault: " + transactionColor1 + vault + transactionColor2 + " -> " + transactionColor3 + newAmount;
+		sendMessageToMembers(tribe, ChatColor.GOLD + "(" + ChatColor.YELLOW + p.getName() + ChatColor.GOLD + ") " + transactionMessage);
+		tribeSection.set("vault", newAmount);
+		mainClass.saveTribesFile();
+	}
+	
 	public void setLevel(String tribe, int vault) {
 		FileConfiguration tribesFile = mainClass.getTribes();
 		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
@@ -142,42 +190,73 @@ public class TribeManager {
 		//ChatColor levelUpColor = net.md_5.bungee.api.ChatColor.of("#bd9b3e");
 		//use later
 		
-		if(vault >= 8192) {
+		if(vault >= 4400) {
 			tribeSection.set("level", 10);
 			tribeSection.set("maxWarps", 4);
 			tribeSection.set("maxPlayers", 12);
-		} else if(vault >= 4096 && vault < 8192) {
+			tribeSection.set("requiredSponges", -1);
+			tribeSection.set("minimumAmount", 4400);
+		} else if(vault >= 2200 && vault < 4400) {
 			tribeSection.set("level", 9);
+			tribeSection.set("maxWarps", 3);
 			tribeSection.set("maxPlayers", 11);
-		} else if(vault >= 2048 && vault < 4096) {
+			tribeSection.set("requiredSponges", 4400);
+			tribeSection.set("minimumAmount", 2200);
+		} else if(vault >= 1900 && vault < 2200) {
 			tribeSection.set("level", 8);
+			tribeSection.set("maxWarps", 3);
 			tribeSection.set("maxPlayers", 10);
-		} else if(vault >= 1024 && vault < 2048) {
+			tribeSection.set("requiredSponges", 2200);
+			tribeSection.set("minimumAmount", 1900);
+		} else if(vault >= 1600 && vault < 1900) {
 			tribeSection.set("level", 7);
 			tribeSection.set("maxWarps", 3);
 			tribeSection.set("maxPlayers", 9);
-		} else if(vault >= 512 && vault < 1024) {
+			tribeSection.set("requiredSponges", 1900);
+			tribeSection.set("minimumAmount", 1600);
+		} else if(vault >= 800 && vault < 1600) {
 			tribeSection.set("level", 6);
+			tribeSection.set("maxWarps", 2);
 			tribeSection.set("maxPlayers", 8);
-		} else if(vault >= 256 && vault < 512) {
+			tribeSection.set("requiredSponges", 1600);
+			tribeSection.set("minimumAmount", 800);
+		} else if(vault >= 600 && vault < 800) {
 			tribeSection.set("level", 5);
+			tribeSection.set("maxWarps", 2);
 			tribeSection.set("maxPlayers", 7);
-		} else if(vault >= 128 && vault < 256) {
+			tribeSection.set("requiredSponges", 800);
+			tribeSection.set("minimumAmount", 600);
+		} else if(vault >= 400 && vault < 600) {
 			tribeSection.set("level", 4);
 			tribeSection.set("maxWarps", 2);
 			tribeSection.set("maxPlayers", 6);
-		} else if(vault >= 64 && vault < 128) {
+			tribeSection.set("requiredSponges", 600);
+			tribeSection.set("minimumAmount", 400);
+		} else if(vault >= 200 && vault < 400) {
 			tribeSection.set("level", 3);
 			tribeSection.set("maxPlayers", 5);
-		} else if(vault >= 32 && vault < 64) {
+			tribeSection.set("requiredSponges", 400);
+			tribeSection.set("minimumAmount", 200);
+		} else if(vault >= 100 && vault < 200) {
 			tribeSection.set("level", 2);
 			tribeSection.set("maxPlayers", 4);
-		} else if(vault < 32) {
+			tribeSection.set("requiredSponges", 200);
+			tribeSection.set("minimumAmount", 100);
+		} else if(vault < 100) {
 			tribeSection.set("level", 1);
 			tribeSection.set("maxPlayers", 3);
+			tribeSection.set("requiredSponges", 100);
+			tribeSection.set("minimumAmount", 0);
 		}
 	}
 	
+	public int getMinimumVaultAmount(String tribe) {
+		FileConfiguration tribesFile = mainClass.getTribes();
+		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
+		int minAmount = tribeSection.getInt("minimumAmount");
+		return minAmount;
+	}
+
 	public int getMaxPlayers(String tribe) {
 		FileConfiguration tribesFile = mainClass.getTribes();
 		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
@@ -192,125 +271,50 @@ public class TribeManager {
 		return level;
 	}
 	
-	public int getNumberOfWarps(String tribe) {
-		FileConfiguration tribesFile = mainClass.getTribes();
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
-		int currentWarps = tribeSection.getInt("currentWarps");
-		return currentWarps;
-	}
-	
-	public void setNumberOfWarps(String tribe, int num) {
-		FileConfiguration tribesFile = mainClass.getTribes();
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
-		tribeSection.set("currentWarps", num);
-	}
-	
-	public int getMaxWarps(String tribe) {
-		FileConfiguration tribesFile = mainClass.getTribes();
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(tribe.toLowerCase());
-		int maxWarps = tribeSection.getInt("maxWarps");
-		return maxWarps;
-	}
-	
-	public void setWarp(String tribe, Player p, String warpName) {
-		FileConfiguration tribesFile = mainClass.getTribes();
-		String playerTribe = getPlayerTribe(p);
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe.toLowerCase());
-		ConfigurationSection warpSection = tribeSection.getConfigurationSection("warps");
-		
-		Location loc = p.getLocation();
-		ConfigurationSection warp = warpSection.createSection(warpName);
-		warp.set("world", loc.getWorld().getName() + "");
-		warp.set("x", loc.getX() + "");
-		warp.set("y", loc.getY() + "");
-		warp.set("z", loc.getZ() + "");
-		warp.set("yaw", loc.getYaw() + "");
-		warp.set("pitch", loc.getPitch() + "");
-		
-		sendMessageToMembers(playerTribe, ChatColor.GREEN + "New tribe warp " + warpName + " has been set!");
-		int numOfWarps = getNumberOfWarps(playerTribe)+1;
-		setNumberOfWarps(playerTribe, numOfWarps);
-        
-		mainClass.saveTribesFile();
-	}
-	
-	public void deleteWarp(String tribe, Player p, String warpName) {
-		FileConfiguration tribesFile = mainClass.getTribes();
-		String playerTribe = getPlayerTribe(p);
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe.toLowerCase());
-		ConfigurationSection warpSection = tribeSection.getConfigurationSection("warps");
-		
-		if(getWarpList(playerTribe, p).contains(warpName)) {
-			warpSection.set(warpName, null);
-			sendMessageToMembers(playerTribe, ChatColor.RED + "Tribe warp " + warpName + " has been deleted!");
-			int numOfWarps = getNumberOfWarps(playerTribe)-1;
-			setNumberOfWarps(playerTribe, numOfWarps);
-	        
-			mainClass.saveTribesFile();
-		} else {
-			p.sendMessage(ChatColor.RED + warpName + " does not exist!");
-		}
-	}
-	
-	public String getWarpString(String tribe, Player p) {
-		FileConfiguration tribesFile = mainClass.getTribes();
-		String playerTribe = getPlayerTribe(p);
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe.toLowerCase());
-		ConfigurationSection warpSection = tribeSection.getConfigurationSection("warps");
-		List<String> warps = new ArrayList<String>();
-		for(String warp : warpSection.getKeys(false)) {
-			warps.add(warp);
-		}
-		
-		String warpString = warps.stream().collect(Collectors.joining(", "));
-		
-		return warpString;
-	}
-	
-	public List<String> getWarpList(String tribe, Player p) {
-		FileConfiguration tribesFile = mainClass.getTribes();
-		String playerTribe = getPlayerTribe(p);
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe.toLowerCase());
-		ConfigurationSection warpSection = tribeSection.getConfigurationSection("warps");
-		List<String> warps = new ArrayList<String>();
-		for(String warp : warpSection.getKeys(false)) {
-			warps.add(warp);
-		}
-		return warps;
-	}
-	
-	public void warpPlayer(String tribe, Player p, String warpName) {
-		p.sendMessage(ChatColor.GREEN + "Warping in 5 seconds...");
-		
-		FileConfiguration tribesFile = mainClass.getTribes();
-		String playerTribe = getPlayerTribe(p);
-		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe.toLowerCase());
-		ConfigurationSection warpSection = tribeSection.getConfigurationSection("warps");
-		ConfigurationSection warp = warpSection.getConfigurationSection(warpName);
-		
-		if(warp != null) {
+	public void getTribeInfo(FileConfiguration tribesFile, ConfigurationSection tribeSection, String tribe, Player p, boolean bool) {
+		WarpManager warpManager = new WarpManager();
+		if(tribesFile.getConfigurationSection(tribe.toLowerCase()) != null) {
+			String tribeName = tribeSection.getString("showname");
+			int level = tribeSection.getInt("level");
+			int vault = tribeSection.getInt("vault");
+			int requiredSponges = tribeSection.getInt("requiredSponges");
+			OfflinePlayer chief = Bukkit.getServer().getOfflinePlayer(UUID.fromString(tribeSection.getString("chief")));
 			
-			new BukkitRunnable(){
-				
-	            @Override
-	            public void run() {
-	            	//retrieve warp location from config
-	    			double x = Double.parseDouble(warp.getString("x"));
-	    			double y = Double.parseDouble(warp.getString("y"));
-	    			double z = Double.parseDouble(warp.getString("z"));
-	    			int yaw = (int)Double.parseDouble(warp.getString("yaw"));
-	    			int pitch = (int)Double.parseDouble(warp.getString("pitch"));
-	    			String world = warp.getString("world");
-	    			Location loc = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
-	    			
-	    			//teleport player
-	    			p.teleport(loc);
-	    			p.sendMessage(ChatColor.GREEN + "Warp successful!");
-	            }
-	           
-	        }.runTaskLater(mainClass, 100);
+			String elder = "";
+			if(!tribeSection.getString("elder").equals("")) {
+				elder = Bukkit.getServer().getOfflinePlayer(UUID.fromString(tribeSection.getString("elder"))).getName();
+			}
+	
+			String dateCreated = tribeSection.getString("dateCreated");
+			
+			
+			p.sendMessage(ChatColor.GRAY + "---------[ " + mainClass.tribesColor + tribeName + ChatColor.GRAY + " ]---------");
+			p.sendMessage(mainClass.lightGreen + "✎Date Founded: " + mainClass.lighterGreen + dateCreated);
+			p.sendMessage(mainClass.lightGreen + "✦Level: " + mainClass.lighterGreen + level);
+			
+			if(requiredSponges == -1) {
+				p.sendMessage(mainClass.lightGreen + "␠Vault: " + mainClass.lighterGreen + vault);
+			} else {
+				p.sendMessage(mainClass.lightGreen + "␠Vault: " + mainClass.lighterGreen + vault + " / " + requiredSponges + " sponges");
+			}
+			p.sendMessage(mainClass.lightGreen + "♚Chief: " + mainClass.lighterGreen + chief.getName());
+			p.sendMessage(mainClass.lightGreen + "♛Elder: " + mainClass.lighterGreen + elder);
+			
+			List<String> membersUUID = tribeSection.getStringList("members");
+			List<String> membersIGN = new ArrayList<String>();
+			for(String member : membersUUID) {
+				membersIGN.add(Bukkit.getServer().getOfflinePlayer(UUID.fromString(member)).getName());
+			}
+			
+			String members = membersIGN.stream().collect(Collectors.joining(", "));
+			
+			p.sendMessage(mainClass.lightGreen + "♞Members (" + membersIGN.size() + "/" + getMaxPlayers(tribe) + "): " + mainClass.lighterGreen + "" + members);
+			
+			if(bool == false) {
+				p.sendMessage(mainClass.lightGreen + "⥮Warps: " + mainClass.lighterGreen + warpManager.getWarpString(tribeName, p));
+			}
 		} else {
-			p.sendMessage(ChatColor.RED + "Warp " + warpName + " does not exist!");
+			p.sendMessage(ChatColor.RED + "That tribe name does not exist or the selected player is not in a tribe!");
 		}
 	}
 }

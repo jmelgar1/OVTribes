@@ -1,6 +1,7 @@
 package org.onlyvanilla.ovtribes.commands.subcommands.admin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,14 +19,15 @@ public class setspongesCommand implements CommandExecutor {
 	
 	String cmd1 = "setsponges";
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    @SuppressWarnings("deprecation")
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             	if(cmd.getName().equalsIgnoreCase(cmd1)) {
             		if(p.hasPermission("tribes.setsponges")) {
             			if(args.length == 2) {
             				
-            				Player rewardee = (Player) Bukkit.getServer().getOfflinePlayer(args[0]);
+            				OfflinePlayer rewardee = Bukkit.getServer().getOfflinePlayer(args[0]);
             				String rewardeeUUID = rewardee.getUniqueId().toString();
             				int amount = Integer.valueOf(args[1]);
             				FileConfiguration rewardsFile = mainClass.getRewards();
