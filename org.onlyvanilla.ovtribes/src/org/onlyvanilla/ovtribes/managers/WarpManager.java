@@ -57,7 +57,7 @@ public class WarpManager {
 		ConfigurationSection warpSection = tribeSection.getConfigurationSection("warps");
 		
 		Location loc = p.getLocation();
-		ConfigurationSection warp = warpSection.createSection(warpName);
+		ConfigurationSection warp = warpSection.createSection(warpName.toLowerCase());
 		warp.set("world", loc.getWorld().getName() + "");
 		warp.set("x", loc.getX() + "");
 		warp.set("y", loc.getY() + "");
@@ -65,7 +65,7 @@ public class WarpManager {
 		warp.set("yaw", loc.getYaw() + "");
 		warp.set("pitch", loc.getPitch() + "");
 		
-		tribeManager.sendMessageToMembers(playerTribe, ChatColor.GREEN + "New tribe warp " + warpName + " has been set!");
+		tribeManager.sendMessageToMembers(playerTribe, ChatColor.GREEN + "New tribe warp " + warpName.toLowerCase() + " has been set!");
 		int numOfWarps = getNumberOfWarps(playerTribe)+1;
 		setNumberOfWarps(playerTribe, numOfWarps);
         
@@ -125,7 +125,7 @@ public class WarpManager {
 		String playerTribe = tribeManager.getPlayerTribe(p);
 		ConfigurationSection tribeSection = tribesFile.getConfigurationSection(playerTribe.toLowerCase());
 		ConfigurationSection warpSection = tribeSection.getConfigurationSection("warps");
-		ConfigurationSection warp = warpSection.getConfigurationSection(warpName);
+		ConfigurationSection warp = warpSection.getConfigurationSection(warpName.toLowerCase());
 		
 		if(warp != null) {
 			
