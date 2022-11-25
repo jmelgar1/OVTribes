@@ -43,6 +43,10 @@ public class ownershipCommand extends SubCommand {
 							tribeManager.sendMessageToMembers(playerTribe, ChatColor.GREEN + p.getName()
 							+ " has tranferred tribe ownership to "
 							+ newChief.getName() + "!");
+							if(tribeManager.CheckForElder(playerTribe, newChief) == true) {
+								tribeManager.removeElder(playerTribe);
+								tribeManager.setElder(playerTribe, p);
+							}
 						} else {
 							p.sendMessage(ChatColor.RED + "You are already chief!");
 						}
