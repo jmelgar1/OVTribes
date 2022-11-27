@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.onlyvanilla.ovtribes.Main;
 import org.onlyvanilla.ovtribes.commands.CommandManager;
@@ -18,6 +19,9 @@ import org.onlyvanilla.ovtribes.events.BreakDiamondOrEmeraldOre;
 import org.onlyvanilla.ovtribes.events.CatchTreasure;
 import org.onlyvanilla.ovtribes.events.KillEvent;
 import org.onlyvanilla.ovtribes.runnables.CheckForUnclaimed;
+import org.onlyvanilla.ovtribes.tribalgames.runnables.BeginAnnouncements;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -42,6 +46,9 @@ public class Main extends JavaPlugin {
 	public ChatColor lightGreen = net.md_5.bungee.api.ChatColor.of("#95bf56");
 	public ChatColor lighterGreen = net.md_5.bungee.api.ChatColor.of("#b4ba82");
 	public ChatColor spongeColor = net.md_5.bungee.api.ChatColor.of("#dfff00");
+	public ChatColor tribalGames = net.md_5.bungee.api.ChatColor.of("#47b347");
+	
+	public String tgPrefix = tribalGames.toString() + ChatColor.BOLD + "TRIBAL GAMES: ";
 	
 	@Override
 	public void onEnable() {
@@ -65,6 +72,10 @@ public class Main extends JavaPlugin {
 		
 		CheckForUnclaimed checkForUnclaimed = new CheckForUnclaimed();
 		checkForUnclaimed.runTaskTimer(this, 0L, 12000);
+		
+		//CTF - 7 hours
+		BeginAnnouncements beginAnnouncements = new BeginAnnouncements();
+		beginAnnouncements.runTaskLater(this, 100);
 	}
 	
 	public void onDisable() {
