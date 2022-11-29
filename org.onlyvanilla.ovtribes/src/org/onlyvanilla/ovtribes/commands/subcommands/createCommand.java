@@ -90,7 +90,7 @@ public class createCommand extends SubCommand {
 	 
 						Bukkit.broadcastMessage(mainClass.tribesColor + tribeName + " has been created by " + p.getName() + "!");
 						for(Player pl : Bukkit.getServer().getOnlinePlayers()) {
-							pl.getWorld().playSound(pl.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0F, 1.0F);
+							pl.getWorld().playSound(pl.getLocation(), Sound.ENTITY_PLAYER_BURP, 1.0F, 0);
 						}
 						
 						mainClass.saveTribesFile();

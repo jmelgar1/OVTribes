@@ -20,6 +20,7 @@ import org.onlyvanilla.ovtribes.events.CatchTreasure;
 import org.onlyvanilla.ovtribes.events.KillEvent;
 import org.onlyvanilla.ovtribes.runnables.CheckForUnclaimed;
 import org.onlyvanilla.ovtribes.tribalgames.runnables.BeginAnnouncements;
+import org.onlyvanilla.ovtribes.tribalgames.runnables.ctf1.CTF1Countdown;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -41,6 +42,10 @@ public class Main extends JavaPlugin {
 	//tribe prices file
 	private File pricesFile;
 	private FileConfiguration prices;
+	
+	//tribe prices file
+	private File ctfFile;
+	private FileConfiguration ctf;
 	
 	public ChatColor tribesColor = net.md_5.bungee.api.ChatColor.of("#db9e58");
 	public ChatColor lightGreen = net.md_5.bungee.api.ChatColor.of("#95bf56");
@@ -64,11 +69,13 @@ public class Main extends JavaPlugin {
 		createTribesFile();
 		createRewardsFile();
 		createPricesFile();
+		createCTFFile();
 		
 		getServer().getPluginManager().registerEvents(new BreakDiamondOrEmeraldOre(), this);
 		getServer().getPluginManager().registerEvents(new BreakAncientDebri(), this);
 		getServer().getPluginManager().registerEvents(new CatchTreasure(), this);
 		getServer().getPluginManager().registerEvents(new KillEvent(), this);
+		getServer().getPluginManager().registerEvents(new CTF1Countdown(), this);
 		
 		CheckForUnclaimed checkForUnclaimed = new CheckForUnclaimed();
 		checkForUnclaimed.runTaskTimer(this, 0L, 12000);
@@ -171,6 +178,36 @@ public class Main extends JavaPlugin {
 		try {
 			prices.load(pricesFile);
 			System.out.println("(!) prices.yml loaded");
+		} catch(IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	//ctf file
+	public void saveCTFFile() {
+		try {
+			ctf.save(ctfFile);
+		} catch (IOException e) {
+			Bukkit.getConsoleSender().sendMessage("Couldn't save ctf.yml");
+		}
+	}
+	
+	public FileConfiguration getCTF() {
+		return this.ctf;
+	}
+	
+	private void createCTFFile() {
+		ctfFile = new File(getDataFolder(), "ctf.yml");
+		if(!ctfFile.exists()) {
+			ctfFile.getParentFile().mkdirs();
+			saveResource("ctf.yml", false);
+			System.out.println("(!) ctf.yml created");
+		}
+		
+		ctf = new YamlConfiguration();
+		try {
+			ctf.load(ctfFile);
+			System.out.println("(!) ctf.yml loaded");
 		} catch(IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		} 
