@@ -45,10 +45,10 @@ public class CTF1Countdown extends BukkitRunnable implements Listener {
 	WorldGuard wg = WorldGuard.getInstance();
 	RegionContainer container = wg.getPlatform().getRegionContainer();
 	World world = Bukkit.getServer().getWorld("world");
-	RegionManager regions = container.get(BukkitAdapter.adapt(world));
+	public RegionManager regions = container.get(BukkitAdapter.adapt(world));
 	public ProtectedRegion region = regions.getRegion("ctf1");
 	
-	List<Player> playersInArena = new ArrayList<Player>();
+	public List<Player> playersInArena = new ArrayList<Player>();
 	
 	//DEFAULT 3600
 	int seconds = 10;
@@ -142,6 +142,7 @@ public class CTF1Countdown extends BukkitRunnable implements Listener {
 					FileConfiguration ctf = mainClass.getCTF();
 					ctf.set("participants", participants);
 					ctf.set("tribes", chosenTribes);
+					ctf.set("playersInArena", playersInArena);
 					mainClass.saveCTFFile();
 					
 					//run event runnable
@@ -190,8 +191,9 @@ public class CTF1Countdown extends BukkitRunnable implements Listener {
 	void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		BossBar bar = playerBossbar.get(p);
-		bar.addPlayer(p);
-		
+		if(bar != null) {
+			bar.addPlayer(p);
+		}
 	}
 	 
 	void sendReminder(Player p, double minutes) {
