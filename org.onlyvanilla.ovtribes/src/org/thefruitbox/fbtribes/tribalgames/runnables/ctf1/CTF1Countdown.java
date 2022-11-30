@@ -13,7 +13,6 @@ import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +22,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.thefruitbox.fbtribes.Main;
 import org.thefruitbox.fbtribes.managers.TribeManager;
+import org.thefruitbox.fbtribes.tribalgames.managers.CTF1Manager;
 
 import com.sk89q.worldguard.*;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -33,7 +33,7 @@ import net.md_5.bungee.api.ChatColor;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 
-public class CTF1Countdown extends BukkitRunnable implements Listener {
+public class CTF1Countdown extends BukkitRunnable implements Listener, CTF1Manager {
     
 	//Main instance
 	private Main mainClass = Main.getInstance();

@@ -1,15 +1,19 @@
 package org.thefruitbox.fbtribes.tribalgames.runnables.ctf1;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 import org.thefruitbox.fbtribes.Main;
+import org.thefruitbox.fbtribes.tribalgames.managers.CTF1Manager;
+import org.thefruitbox.fbtribes.tribalgames.runnables.CountdownTimerLong;
+import org.thefruitbox.fbtribes.tribalgames.runnables.UpdateScoreboard;
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -21,7 +25,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class CTF1BeginEvent extends BukkitRunnable {
+public class CTF1BeginEvent  extends BukkitRunnable implements CTF1Manager {
 	
 	//Main instance
 	private Main mainClass = Main.getInstance();
@@ -29,14 +33,7 @@ public class CTF1BeginEvent extends BukkitRunnable {
 	CTF1Countdown ctf1 = new CTF1Countdown();
 
 	@Override
-	public void run() {
-		FileConfiguration ctf = mainClass.getCTF();
-		List<String> participants = ctf.getStringList("participants");
-		List<String> tribes = ctf.getStringList("tribes");
-		
-		@SuppressWarnings("unchecked")
-		List<Player> playersInArena = (List<Player>) ctf.getList("playersInArena");
-		
+	public void run() {	
 		ProtectedRegion region = ctf1.regions.getRegion("ctf1spec");
 		
 		BlockVector3 minPoint = region.getMinimumPoint();
@@ -71,7 +68,10 @@ public class CTF1BeginEvent extends BukkitRunnable {
 				regionMembers.addPlayer(p.getName());
 				ctf1.region.setMembers(regionMembers);
 			}
-		}		
+		}
+		
+		//create game scoreboard
+		createScoreboard();
 		
 		//don't allow participants to exit
 		ctf1.region.setFlag(Flags.EXIT, StateFlag.State.DENY);
@@ -94,5 +94,51 @@ public class CTF1BeginEvent extends BukkitRunnable {
 		
 		CTF1EndEvent ctf1endevent = new CTF1EndEvent();
 		ctf1endevent.runTaskLater(mainClass, 36000);
+	}
+	
+	void createScoreboard() {
+		//int redKills = mainClass.getCTF().getConfigurationSection("teams").getConfigurationSection("red").getInt("kills");
+		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
+		
+		String title = mainClass.tgPrefix + ChatColor.YELLOW.toString() + ChatColor.BOLD + "CTF";
+		Objective obj = board.registerNewObjective("FBCTF", "dummy", title);
+		
+		//empty space
+		obj.getScore(ChatColor.RESET.toString()).setScore(11);
+		
+		//red team section
+		obj.getScore(ChatColor.RED.toString() + ChatColor.BOLD + "RED").setScore(10);
+		obj.getScore(ChatColor.GRAY + "Captures: " + ChatColor.YELLOW + 0 + ChatColor.GOLD + "/" + ChatColor.YELLOW + 5 + ChatColor.RESET.toString()).setScore(9);
+		obj.getScore(ChatColor.GRAY + "Kills: " + ChatColor.YELLOW + 0 + ChatColor.RESET.toString()).setScore(8);
+		
+		//empty space
+		obj.getScore(ChatColor.RESET.toString() + ChatColor.RESET.toString()).setScore(7);
+		
+		//blue team section
+		obj.getScore(ChatColor.BLUE.toString() + ChatColor.BOLD + "BLUE").setScore(6);
+		obj.getScore(ChatColor.GRAY + "Captures: " + ChatColor.YELLOW + 0 + ChatColor.GOLD + "/" + ChatColor.YELLOW + 5).setScore(5);
+		obj.getScore(ChatColor.GRAY + "Kills: " + ChatColor.YELLOW + 0).setScore(4);
+		
+		//empty space
+		obj.getScore(ChatColor.RESET.toString() + ChatColor.RESET.toString() + ChatColor.RESET.toString()).setScore(3);
+		
+		//time left counter
+		obj.getScore(ChatColor.GRAY + "Time Left: " + ChatColor.GREEN + ctf.getString("current-countdown")).setScore(2);
+		
+		//empty space
+		obj.getScore(ChatColor.RESET.toString() + ChatColor.RESET.toString() + ChatColor.RESET.toString() + ChatColor.RESET.toString()).setScore(1);
+		
+		//server ip
+		obj.getScore(ChatColor.GREEN + "play.thefruitbox.net").setScore(0);
+		
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		for(String s : participants) {
+			Player p = Bukkit.getPlayer(s);
+			p.setScoreboard(board);
+		}
+		
+		UpdateScoreboard updateScoreboard = new UpdateScoreboard();
+		updateScoreboard.setCountdown();
+		updateScoreboard.run();
 	}
 }

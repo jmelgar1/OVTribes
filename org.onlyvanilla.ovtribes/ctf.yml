@@ -1,2 +1,14 @@
 #ctf1
 participants:
+
+#team info
+teams:
+   red:
+      captures: 0
+      kills: 0
+   blue:
+      captures: 0
+      kills: 0
+      
+#countdown info
+current-countdown: 0

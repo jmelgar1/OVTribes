@@ -1,26 +1,16 @@
 package org.thefruitbox.fbtribes.tribalgames.runnables.ctf1;
 
-import java.util.List;
-
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.thefruitbox.fbtribes.Main;
+import org.thefruitbox.fbtribes.tribalgames.managers.CTF1Manager;
 
 import com.sk89q.worldguard.domains.DefaultDomain;
 
 import net.md_5.bungee.api.ChatColor;
 
-public class CTF1EndEvent extends BukkitRunnable {
+public class CTF1EndEvent extends BukkitRunnable implements CTF1Manager {
 	
 	CTF1Countdown ctf1 = new CTF1Countdown();
-	
-	//Main instance
-	private Main mainClass = Main.getInstance();
-	
-	FileConfiguration ctf = mainClass.getCTF();
-	List<String> participants = ctf.getStringList("participants");
 
 	@Override
 	public void run() {
